@@ -30,6 +30,11 @@
             overflow-x: hidden;
             position: relative;
             min-height: 100vh;
+            /* 禁止選取文字 */
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
         
         /* 动态背景粒子效果 */
@@ -570,7 +575,7 @@
             }
         }
         
-        @media (prefers-reduced-motion: reduce) {
+                    @media (prefers-reduced-motion: reduce) {
             * {
                 animation-duration: 0.01ms !important;
                 animation-iteration-count: 1 !important;
@@ -581,9 +586,26 @@
                 display: none;
             }
         }
+        
+        /* 防複製保護 */
+        ::selection {
+            background: transparent;
+            color: inherit;
+        }
+        
+        ::-moz-selection {
+            background: transparent;
+            color: inherit;
+        }
+        
+        img {
+            pointer-events: none;
+            -webkit-user-drag: none;
+            user-select: none;
+        }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;">
     <!-- 动态背景 -->
     <div class="gradient-bg"></div>
     <div class="particles" id="particles"></div>
@@ -802,7 +824,7 @@
         </footer>
         </div>
 
-    
+   
     <script>
         // 创建粒子效果
         function createParticles() {
@@ -839,6 +861,125 @@
         // 页面加载完成后执行
         document.addEventListener('DOMContentLoaded', function() {
             createParticles();
+            
+            // 防複製保護
+            // 禁止右鍵菜單
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                showProtectionMessage();
+                return false;
+            });
+            
+            // 禁止選取文字
+            document.addEventListener('selectstart', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            // 禁止拖曳
+            document.addEventListener('dragstart', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            // 禁止複製快捷鍵 (Ctrl+C, Cmd+C)
+            document.addEventListener('copy', function(e) {
+                e.preventDefault();
+                showProtectionMessage();
+                return false;
+            });
+            
+            // 禁止剪下快捷鍵 (Ctrl+X, Cmd+X)
+            document.addEventListener('cut', function(e) {
+                e.preventDefault();
+                showProtectionMessage();
+                return false;
+            });
+            
+            // 禁止常見的複製快捷鍵組合
+            document.addEventListener('keydown', function(e) {
+                // Ctrl+C, Cmd+C (複製)
+                if ((e.ctrlKey || e.metaKey) && e.key === 'c') {
+                    e.preventDefault();
+                    showProtectionMessage();
+                    return false;
+                }
+                // Ctrl+X, Cmd+X (剪下)
+                if ((e.ctrlKey || e.metaKey) && e.key === 'x') {
+                    e.preventDefault();
+                    showProtectionMessage();
+                    return false;
+                }
+                // Ctrl+A, Cmd+A (全選)
+                if ((e.ctrlKey || e.metaKey) && e.key === 'a') {
+                    e.preventDefault();
+                    return false;
+                }
+                // Ctrl+U, Cmd+U (查看源代碼)
+                if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+                    e.preventDefault();
+                    return false;
+                }
+                // F12 (開發者工具)
+                if (e.key === 'F12') {
+                    e.preventDefault();
+                    return false;
+                }
+                // Ctrl+Shift+I, Cmd+Option+I (開發者工具)
+                if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'I') {
+                    e.preventDefault();
+                    return false;
+                }
+                // Ctrl+Shift+J, Cmd+Option+J (控制台)
+                if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'J') {
+                    e.preventDefault();
+                    return false;
+                }
+                // Ctrl+Shift+C, Cmd+Option+C (檢查元素)
+                if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'C') {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            
+            // 顯示保護提示訊息
+            function showProtectionMessage() {
+                // 創建提示框（如果不存在）
+                let messageBox = document.getElementById('protection-message');
+                if (!messageBox) {
+                    messageBox = document.createElement('div');
+                    messageBox.id = 'protection-message';
+                    messageBox.style.cssText = `
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: linear-gradient(135deg, rgba(255, 69, 0, 0.95), rgba(220, 53, 69, 0.95));
+                        color: white;
+                        padding: 20px 40px;
+                        border-radius: 15px;
+                        box-shadow: 0 10px 40px rgba(255, 69, 0, 0.5);
+                        z-index: 10000;
+                        font-size: 1.1rem;
+                        font-weight: bold;
+                        text-align: center;
+                        backdrop-filter: blur(10px);
+                        border: 2px solid rgba(255, 255, 255, 0.3);
+                        opacity: 0;
+                        transition: opacity 0.3s ease;
+                    `;
+                    messageBox.innerHTML = '⚠️ 本網頁內容受保護，禁止複製！';
+                    document.body.appendChild(messageBox);
+                }
+                
+                // 顯示訊息
+                messageBox.style.opacity = '1';
+                
+                // 2秒後自動隱藏
+                setTimeout(() => {
+                    messageBox.style.opacity = '0';
+                }, 2000);
+            }
             
             // 滚动动画效果 - 使用Intersection Observer优化性能
             const sections = document.querySelectorAll('.section');
@@ -929,5 +1070,4 @@
     </script>
 </body>
 </html>
-
 
