@@ -51,11 +51,13 @@
             background: rgba(0, 195, 0, 0.6);
             border-radius: 50%;
             animation: float linear infinite;
+            will-change: transform;
+            transform: translateZ(0);
         }
         
         @keyframes float {
             0% {
-                transform: translateY(100vh) translateX(0);
+                transform: translate3d(0, 100vh, 0);
                 opacity: 0;
             }
             10% {
@@ -65,7 +67,7 @@
                 opacity: 1;
             }
             100% {
-                transform: translateY(-100px) translateX(100px);
+                transform: translate3d(100px, -100px, 0);
                 opacity: 0;
             }
         }
@@ -82,12 +84,14 @@
                         radial-gradient(circle at 40% 20%, rgba(255, 149, 0, 0.08) 0%, transparent 50%);
             animation: gradientShift 20s ease infinite;
             z-index: 0;
+            will-change: transform;
+            transform: translateZ(0);
         }
         
         @keyframes gradientShift {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            33% { transform: translate(5%, 5%) rotate(120deg); }
-            66% { transform: translate(-5%, 5%) rotate(240deg); }
+            0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+            33% { transform: translate3d(5%, 5%, 0) rotate(120deg); }
+            66% { transform: translate3d(-5%, 5%, 0) rotate(240deg); }
         }
         
         .content-wrapper {
@@ -186,6 +190,8 @@
             position: relative;
             overflow: hidden;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+            transform: translateZ(0);
         }
         
         .glass-card::before {
@@ -525,6 +531,36 @@
             h2 { font-size: 1.5rem; }
             .btn { width: 100%; max-width: 300px; }
             .back-to-top { bottom: 20px; right: 20px; width: 50px; height: 50px; }
+            
+            /* 移动端性能优化 */
+            .gradient-bg {
+                animation: gradientShift 30s ease infinite;
+            }
+            
+            .glass-card {
+                backdrop-filter: blur(10px);
+            }
+            
+            .glass-card:hover {
+                transform: none;
+            }
+            
+            @keyframes logoGlow {
+                0%, 100% { filter: drop-shadow(0 0 15px rgba(0, 195, 0, 0.6)); }
+                50% { filter: drop-shadow(0 0 20px rgba(0, 195, 0, 0.8)); }
+            }
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            
+            .particles {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -753,7 +789,18 @@
         // 创建粒子效果
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
-            const particleCount = 50;
+            
+            // 检测设备类型和性能
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const isLowPerformance = navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4;
+            
+            // 根据设备调整粒子数量
+            let particleCount;
+            if (isMobile || isLowPerformance) {
+                particleCount = 15; // 移动设备或低性能设备使用较少粒子
+            } else {
+                particleCount = 50; // 桌面设备使用更多粒子
+            }
             
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
@@ -775,32 +822,46 @@
         document.addEventListener('DOMContentLoaded', function() {
             createParticles();
             
-            // 滚动动画效果
+            // 滚动动画效果 - 使用Intersection Observer优化性能
             const sections = document.querySelectorAll('.section');
+            
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '50px'
+            };
             
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.style.opacity = '1';
                         entry.target.style.transform = 'translateY(0)';
+                        observer.unobserve(entry.target); // 停止观察已显示的元素
                     }
                 });
-            }, { threshold: 0.1 });
+            }, observerOptions);
             
             sections.forEach(section => {
                 observer.observe(section);
             });
             
-            // 回到顶部按钮功能
+            // 回到顶部按钮功能 - 使用节流优化性能
             const backToTopBtn = document.getElementById('backToTop');
+            let scrollTimeout;
             
             window.addEventListener('scroll', function() {
-                if (window.pageYOffset > 300) {
-                    backToTopBtn.classList.add('show');
-                } else {
-                    backToTopBtn.classList.remove('show');
+                // 使用requestAnimationFrame优化滚动性能
+                if (scrollTimeout) {
+                    window.cancelAnimationFrame(scrollTimeout);
                 }
-            });
+                
+                scrollTimeout = window.requestAnimationFrame(function() {
+                    if (window.pageYOffset > 300) {
+                        backToTopBtn.classList.add('show');
+                    } else {
+                        backToTopBtn.classList.remove('show');
+                    }
+                });
+            }, { passive: true }); // passive: true 提升滚动性能
             
             backToTopBtn.addEventListener('click', function() {
                 window.scrollTo({
@@ -809,17 +870,43 @@
                 });
             });
             
-            // 按钮点击效果
+            // 按钮点击效果 - 优化移动端体验
             const buttons = document.querySelectorAll('.btn');
-            buttons.forEach(button => {
-                button.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-3px) scale(1.05)';
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            if (!isMobile) {
+                // 桌面端才添加悬停效果
+                buttons.forEach(button => {
+                    button.addEventListener('mouseenter', function() {
+                        this.style.transform = 'translateY(-3px) scale(1.05)';
+                    });
+                    
+                    button.addEventListener('mouseleave', function() {
+                        this.style.transform = 'translateY(0) scale(1)';
+                    });
                 });
-                
-                button.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateY(0) scale(1)';
-                });
-            });
+            }
+            
+            // 优化性能：延迟加载非关键动画
+            setTimeout(() => {
+                document.body.classList.add('animations-loaded');
+            }, 1000);
+        });
+        
+        // 页面可见性API - 页面不可见时暂停动画
+        document.addEventListener('visibilitychange', function() {
+            const particles = document.getElementById('particles');
+            const gradientBg = document.querySelector('.gradient-bg');
+            
+            if (document.hidden) {
+                // 页面不可见时暂停动画
+                particles.style.animationPlayState = 'paused';
+                gradientBg.style.animationPlayState = 'paused';
+            } else {
+                // 页面可见时恢复动画
+                particles.style.animationPlayState = 'running';
+                gradientBg.style.animationPlayState = 'running';
+            }
         });
     </script>
 </body>
