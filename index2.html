@@ -1,1 +1,1072 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《LINE社群規範》</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #00c300;
+            --secondary: #2c6bed;
+            --accent: #ff9500;
+            --dark: #0a0e27;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.18);
+        }
+        
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1428 100%);
+            color: #e0e6ed;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+            /* 禁止選取文字 */
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        
+        /* 动态背景粒子效果 */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(0, 195, 0, 0.6);
+            border-radius: 50%;
+            animation: float linear infinite;
+            will-change: transform;
+            transform: translateZ(0);
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translate3d(0, 100vh, 0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate3d(100px, -100px, 0);
+                opacity: 0;
+            }
+        }
+        
+        /* 渐变光效 */
+        .gradient-bg {
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 195, 0, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(44, 107, 237, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 20%, rgba(255, 149, 0, 0.08) 0%, transparent 50%);
+            animation: gradientShift 20s ease infinite;
+            z-index: 0;
+            will-change: transform;
+            transform: translateZ(0);
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+            33% { transform: translate3d(5%, 5%, 0) rotate(120deg); }
+            66% { transform: translate3d(-5%, 5%, 0) rotate(240deg); }
+        }
+        
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+        
+        header {
+            background: linear-gradient(135deg, rgba(0, 195, 0, 0.15) 0%, rgba(44, 107, 237, 0.15) 100%);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            text-align: center;
+            padding: 4rem 1rem 3rem;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 3rem;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 20px rgba(0, 195, 0, 0.8));
+            animation: logoGlow 2s ease-in-out infinite;
+        }
+        
+        @keyframes logoGlow {
+            0%, 100% { filter: drop-shadow(0 0 20px rgba(0, 195, 0, 0.8)); }
+            50% { filter: drop-shadow(0 0 30px rgba(0, 195, 0, 1)) drop-shadow(0 0 40px rgba(44, 107, 237, 0.6)); }
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00ff00, #00c3ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+            animation: titleShine 3s ease-in-out infinite;
+        }
+        
+        @keyframes titleShine {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+            color: #b8c5d6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1.5rem 3rem;
+        }
+        
+        /* 玻璃态卡片效果 */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+            transform: translateZ(0);
+        }
+        
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transition: left 0.5s;
+        }
+        
+        .glass-card:hover::before {
+            left: 100%;
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 195, 0, 0.3);
+            box-shadow: 0 12px 40px rgba(0, 195, 0, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .intro-card {
+            text-align: center;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 149, 0, 0.1) 100%);
+            border-left: 3px solid var(--accent);
+            padding: 1.2rem;
+            margin: 1.5rem 0;
+            border-radius: 0 15px 15px 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .section {
+            animation: fadeInUp 0.8s ease-out backwards;
+        }
+        
+        .section:nth-child(2) { animation-delay: 0.1s; }
+        .section:nth-child(3) { animation-delay: 0.2s; }
+        .section:nth-child(4) { animation-delay: 0.3s; }
+        .section:nth-child(5) { animation-delay: 0.4s; }
+        .section:nth-child(6) { animation-delay: 0.5s; }
+        
+        h2 {
+            color: #00ff88;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid rgba(0, 255, 136, 0.2);
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.6s ease;
+        }
+        
+        .glass-card:hover h2::after {
+            width: 100%;
+        }
+        
+        h2 i {
+            margin-right: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(0, 195, 0, 0.5));
+        }
+        
+        h3 {
+            color: #00d4ff;
+            font-size: 1.3rem;
+            margin: 1.5rem 0 1rem;
+        }
+        
+        ul {
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        li {
+            margin-bottom: 0.8rem;
+            position: relative;
+            padding-left: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        li:hover {
+            padding-left: 1rem;
+            color: #00ff88;
+        }
+        
+        li:before {
+            content: "▹";
+            color: var(--primary);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+        
+        /* 規範編號特殊樣式 */
+        li strong {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+            margin-right: 6px;
+            background: linear-gradient(135deg, #00c3ff 0%, #00ff88 100%);
+            color: #0a0e27;
+            box-shadow: 0 2px 8px rgba(0, 195, 255, 0.3);
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+        
+        li:hover strong {
+            box-shadow: 0 4px 12px rgba(0, 195, 255, 0.5);
+            transform: scale(1.05);
+        }
+        
+        .penalty-section {
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.1) 0%, rgba(255, 69, 0, 0.1) 100%);
+            border-left: 3px solid #dc3545;
+        }
+        
+        .penalty-item {
+            padding: 1.2rem;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .penalty-item:hover {
+            transform: translateX(10px);
+        }
+        
+        .penalty-item.warning-level1 {
+            background: linear-gradient(135deg, rgba(46, 125, 50, 0.15) 0%, rgba(56, 142, 60, 0.15) 100%);
+            border-left: 3px solid #2e7d32;
+        }
+        
+        .penalty-item.warning-level2 {
+            background: linear-gradient(135deg, rgba(255, 143, 0, 0.15) 0%, rgba(255, 152, 0, 0.15) 100%);
+            border-left: 3px solid #ff8f00;
+        }
+        
+        .penalty-item.warning-level3 {
+            background: linear-gradient(135deg, rgba(198, 40, 40, 0.15) 0%, rgba(211, 47, 47, 0.15) 100%);
+            border-left: 3px solid #c62828;
+        }
+        
+        .contact-section {
+            background: linear-gradient(135deg, rgba(23, 162, 184, 0.1) 0%, rgba(0, 172, 193, 0.1) 100%);
+            border-left: 3px solid #17a2b8;
+            text-align: center;
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 195, 0, 0.4);
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 0 6px 25px rgba(0, 195, 0, 0.6);
+            transform: translateY(-3px);
+        }
+        
+        .btn-accent {
+            background: linear-gradient(135deg, #ff9500 0%, #ff5e00 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 149, 0, 0.4);
+        }
+        
+        .btn-accent:hover {
+            box-shadow: 0 6px 25px rgba(255, 149, 0, 0.6);
+            transform: translateY(-3px);
+        }
+        
+        .btn i {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 195, 0, 0.4);
+            cursor: pointer;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .back-to-top:hover {
+            transform: translateY(-8px) scale(1.1);
+            box-shadow: 0 8px 30px rgba(0, 195, 0, 0.6);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            margin-top: 3rem;
+        }
+        
+        /* 50種大魔王專屬樣式 */
+        .admin-voice-title {
+            color: #ff9500 !important;
+            border-bottom-color: rgba(255, 149, 0, 0.3) !important;
+        }
+        
+        .category-group {
+            margin-top: 25px;
+            border-radius: 15px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        
+        .category-name {
+            background: linear-gradient(135deg, #ff9500 0%, #ff5e00 100%);
+            color: white;
+            padding: 8px 15px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 10px rgba(255, 149, 0, 0.3);
+        }
+        
+        .trouble-list {
+            background: rgba(255, 149, 0, 0.05);
+            padding: 15px;
+            border: 1px solid rgba(255, 149, 0, 0.2);
+            border-radius: 0 0 15px 15px;
+        }
+        
+        .trouble-item {
+            padding: 12px 0;
+            border-bottom: 1px dashed rgba(255, 149, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .trouble-item:hover {
+            padding-left: 10px;
+            background: rgba(255, 149, 0, 0.05);
+        }
+        
+        .trouble-item:last-child { border-bottom: none; }
+        
+        .trouble-label {
+            font-weight: bold;
+            color: #ff9500;
+            display: block;
+            font-size: 1.05rem;
+            margin-bottom: 4px;
+        }
+        
+        .trouble-text {
+            color: #b8c5d6;
+            display: block;
+            font-size: 0.95rem;
+            padding-left: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .logo { font-size: 3.5rem; }
+            .glass-card { padding: 1.5rem; }
+            h2 { font-size: 1.5rem; }
+            .btn { width: 100%; max-width: 300px; }
+            .back-to-top { bottom: 20px; right: 20px; width: 50px; height: 50px; }
+            
+            /* 移动端性能优化 */
+            .gradient-bg {
+                animation: gradientShift 30s ease infinite;
+            }
+            
+            .glass-card {
+                backdrop-filter: blur(10px);
+            }
+            
+            .glass-card:hover {
+                transform: none;
+            }
+            
+            @keyframes logoGlow {
+                0%, 100% { filter: drop-shadow(0 0 15px rgba(0, 195, 0, 0.6)); }
+                50% { filter: drop-shadow(0 0 20px rgba(0, 195, 0, 0.8)); }
+            }
+        }
+        
+                    @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            
+            .particles {
+                display: none;
+            }
+        }
+        
+        /* 防複製保護 */
+        ::selection {
+            background: transparent;
+            color: inherit;
+        }
+        
+        ::-moz-selection {
+            background: transparent;
+            color: inherit;
+        }
+        
+        img {
+            pointer-events: none;
+            -webkit-user-drag: none;
+            user-select: none;
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;">
+    <!-- 动态背景 -->
+    <div class="gradient-bg"></div>
+    <div class="particles" id="particles"></div>
+    
+    <!-- 回到顶部按钮 -->
+    <div class="back-to-top" id="backToTop">
+        <i class="fas fa-chevron-up"></i>
+    </div>
+    
+    <div class="content-wrapper">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fab fa-line"></i>
+                </div>
+                <h1>LINE社群規範</h1>
+                <p class="subtitle">為了維護良好的社群環境，確保每位成員都能愉快交流，請務必遵守以下規則</p>
+            </div>
+        </header>
+        
+        <div class="container">
+            <div class="glass-card intro-card">
+                <p>歡迎加入本社群！為了維護良好的社群環境，確保每位成員都能愉快交流，請務必遵守以下規則。違反規章者，管理員有權採取警告或踢出社群等措施。</p>
+                <div class="warning-box">
+                    <i class="fas fa-exclamation-triangle"></i> 本規範適用於所有社群成員，管理員將嚴格執行以確保社群品質
+                </div>
+            </div>
+            
+            <div class="glass-card section">
+                <h2><i class="fas fa-handshake"></i> 一、基本禮儀規範</h2>
+                <ul>
+                    <li><strong>1-1</strong> 禁止人身攻擊、歧視、侮辱、挑釁等不當言行。</li>
+                    <li><strong>1-2</strong> 禁止任何形式騷擾成員（含惡意標記、訊息擾等）。</li>
+                    <li><strong>1-3</strong> 禁止連續發送無意義訊息、貼圖或圖片。</li>
+                    <li><strong>1-4</strong> 禁止冒充管理員或成員誤導他人。</li>
+                    <li><strong>1-5</strong> 禁止對管理員、導師有不禮貌或挑釁言行。</li>
+                    <li><strong>1-6</strong> 禁止濫用社群功能（如頻繁使用查詢功能）。</li>
+                    <li><strong>1-7</strong> 禁止使用不雅、冒犯性或誤導性暱稱。</li>
+                    <li><strong>1-8</strong> 禁止發布與主題無關的瑣事。</li>
+                    <li><strong>1-9</strong> 禁止使用暗號、替代文字規避敏感詞過濾系統。</li>
+                </ul>
+            </div>
+            
+            <div class="glass-card section">
+                <h2><i class="fas fa-file-alt"></i> 二、內容發布規範</h2>
+                
+                <h3>A. 合法性與安全性</h3>
+                <ul>
+                    <li><strong>2A-1</strong> 禁止發布違法內容（暴力、色情、賭博、詐騙等）。</li>
+                    <li><strong>2A-2</strong> 禁止發布早、午、晚安貼圖或圖片訊息（娛樂群不禁止）。</li>
+                    <li><strong>2A-3</strong> 禁止散布謠言、假新聞或未經證實訊息。</li>
+                    <li><strong>2A-4</strong> 禁止分享盜版內容、侵犯版權作品或未授權他人創作。</li>
+                    <li><strong>2A-5</strong> 禁止分享惡意軟體、釣魚連結或危害設備安全的檔案。</li>
+                    <li><strong>2A-6</strong> 禁止公開他人個資（含電話、地址、私人對話截圖等）。</li>
+                    <li><strong>2A-7</strong> 禁止非專業人士參與解讀他人的醫學影像或提供診斷建議（違反醫師法）。</li>
+                    <li><strong>2A-8</strong> 禁止使用AI工具生成內容，對線上患者提供醫療建議，或參與推拿、整復相關之學習與討論。</li>
+                </ul>
+                
+                <h3>B. 內容品質限制</h3>
+                <ul>
+                    <li><strong>2B-1</strong> 禁止重複發布相同或類似內容造成洗版。</li>
+                    <li><strong>2B-2</strong> 禁止發布純表情、符號等無意義內容。</li>
+                    <li><strong>2B-3</strong> 禁止過度使用貼圖、表情包或符號。</li>
+                    <li><strong>2B-4</strong> 禁止分享過大檔案或影片影響社群運作。</li>
+                    <li><strong>2B-5</strong> 引用本社群言論需註明出處並保持原意。</li>
+                </ul>
+                
+                <h3>C. 敏感內容限制</h3>
+                <ul>
+                    <li><strong>2C-1</strong> 禁止分享股市、政治、宗教等敏感話題及影片（娛樂群不禁止）。</li>
+                    <li><strong>2C-2</strong> 禁止分享血腥、驚悚、性暗示或其他引發不適的媒體。</li>
+                    <li><strong>2C-3</strong> 禁止發布地域歧視、性別對立等爭議性內容。</li>
+                    <li><strong>2C-4</strong> 禁止發布可能洩漏商業機密或未公開專案資訊。</li>
+                    <li><strong>2C-5</strong> 禁止成員自行糾錯，若發現錯誤資訊，請標記管理員處理，勿公開挑錯或指責分享者。</li>
+                </ul>
+            </div>
+            
+            <div class="glass-card section">
+                <h2><i class="fas fa-shopping-cart"></i> 三、商業與推廣規範</h2>
+                <ul>
+                    <li><strong>3-1</strong> 禁止發布廣告、推銷或商業宣傳（需管理員授權）。</li>
+                    <li><strong>3-2</strong> 禁止推廣課程、活動或募款（需管理員授權）。</li>
+                    <li><strong>3-3</strong> 禁止任何交易、商業行為或惡意競爭。</li>
+                    <li><strong>3-4</strong> 禁止透過私訊進行商業洽談或招募行為。</li>
+                </ul>
+            </div>
+            
+            <div class="glass-card section">
+                <h2><i class="fas fa-users-cog"></i> 四、管理與申訴規範</h2>
+                <ul>
+                    <li><strong>4-1</strong> 管理員有權依情況警告或移除違規成員（無需事先通知）。</li>
+                    <li><strong>4-2</strong> 對處置有異議者，可至官網進行理性申訴。</li>
+                    <li><strong>4-3</strong> 禁止質疑管理員已回覆的專業貼文。</li>
+                    <li><strong>4-4</strong> 禁止濫用檢舉功能（僅限確實違規行為）。</li>
+                    <li><strong>4-5</strong> 管理員得依需求更新規章並公告實施。</li>
+                    <li><strong>4-6</strong> 重大爭議事件應提交管理團隊會議裁決。</li>
+                </ul>
+            </div>
+            
+            <div class="glass-card section">
+                <h2><i class="fas fa-user-shield"></i> 五、成員責任與隱私</h2>
+                <ul>
+                    <li><strong>5-1</strong> 成員須對自身言行負全責，社群不承擔法律責任。</li>
+                    <li><strong>5-2</strong> 禁止外流社群內討論內容，保障成員隱私。</li>
+                    <li><strong>5-3</strong> 禁止分享其他平台未公開之對話紀錄或會議內容。</li>
+                    <li><strong>5-4</strong> 成員有義務及時舉報安全漏洞或異常帳號。</li>
+                </ul>
+            </div>
+            
+            <div class="glass-card section penalty-section">
+                <h2><i class="fas fa-gavel"></i> 違規處理方式</h2>
+                <div class="penalties">
+                    <div class="penalty-item warning-level1">
+                        <h3><i class="fas fa-exclamation-circle"></i> 初次違規</h3>
+                        <p>將給予警告並刪除違規內容！</p>
+                    </div>
+                    <div class="penalty-item warning-level2">
+                        <h3><i class="fas fa-times-circle"></i> 多次違規</h3>
+                        <p>視情節輕重，將給予警告或踢出社群！</p>
+                    </div>
+                    <div class="penalty-item warning-level3">
+                        <h3><i class="fas fa-ban"></i> 嚴重違規</h3>
+                        <p>將立即踢出社群並封鎖！</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="glass-card section">
+                <h2 class="admin-voice-title"><i class="fas fa-skull-crossbones"></i>板主厭惡的類型</h2>
+                <p>以下是板主在實務上最厭惡的社群成員類型，請大家引以為戒：</p>
 
+                <div class="category-group">
+                    <div class="category-name">一、挑戰規則與態度</div>
+                    <div class="trouble-list">
+                        <div class="trouble-item" style="border-left: 4px solid #ff4500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 1. 不看板規：</span><span class="trouble-text">不看板規，違規後被罰又回頭質疑問「為什麼」。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #EA7500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 2. 遊走邊緣：</span><span class="trouble-text">不斷試探板規底線，看管理員什麼時候會生氣。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #64A600; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 3. 愛鑽漏洞：</span><span class="trouble-text">利用文字遊戲或規章沒寫死的灰色地帶進行騷擾。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #ff4500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 4. 死不認錯：</span><span class="trouble-text">違規證據確鑿，還能硬凹是管理員誤會。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #64A600; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 5. 伸手討餵：</span><span class="trouble-text">Google 一秒就有答案的問題，偏要發文等別人餵。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #64A600; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 6. 討餵挑食：</span><span class="trouble-text">別人給了答案，還嫌對方解釋得不夠詳細。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #64A600; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 7. 廣告偽裝：</span><span class="trouble-text">打著分享的名義，實則導入私人廣告與連結。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #64A600; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 8. 瘋狂洗版：</span><span class="trouble-text">短時間內發送大量重複或無意義的文字。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #64A600; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 9. 忽視公告：</span><span class="trouble-text">管理員剛發完公告，他馬上問公告裡剛講過的事。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #64A600; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 10. 考古挖墳：</span><span class="trouble-text">回覆三年前早已過時的貼文，強行推上來。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #EA7500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 11. 正義魔人：</span><span class="trouble-text">拿雞毛當箭令，瘋狂檢舉他個人不喜歡的言論。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #ff4500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 12. 惡意引戰：</span><span class="trouble-text">故意發引戰言論，等著看大家吵架起爭執。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #ff4500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 13. 私訊轟炸：</span><span class="trouble-text">為了小事 24 小時私訊管理員個人帳號不肯罷休。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #EA7500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 14. 酸民代表：</span><span class="trouble-text">不論別人發什麼，第一句話永遠是嘲諷或貶低。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #ff4500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 15. 鍵盤律師：</span><span class="trouble-text">違規後搬出法條威脅要告管理員，無視社群契約。</span></div>
+                    </div>
+                </div>
+
+                <div class="category-group">
+                    <div class="category-name">二、內容品質與騷擾</div>
+                    <div class="trouble-list">
+                        <div class="trouble-item" style="border-left: 4px solid #64A600; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 16. 悲情勒索：</span><span class="trouble-text">違規被罰後開始哭訴生活不如意，要求法外開恩。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #64A600; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 17. 雙重標準：</span><span class="trouble-text">自己能罵人，被別人酸了就立刻喊受委屈。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #ff4500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 18. 退群威脅：</span><span class="trouble-text">如果不順他的意，就喊著要帶人集體退群。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #ff4500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 19. 惡俗幽默：</span><span class="trouble-text">開性別或歧視玩笑，被指責後說「認真就輸了」。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #64A600; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 20. 負能量文：</span><span class="trouble-text">把社群當成個人情緒宣洩口，整天發抱怨文。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #64A600; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 21. 標題詐騙：</span><span class="trouble-text">標題很驚悚，內容卻是與主題完全無關的東西。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #64A600; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 22. 亂套標籤：</span><span class="trouble-text">明明有分類規則，卻隨便亂點或完全不用標籤。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #64A600; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 23. 炫耀引戰：</span><span class="trouble-text">純粹發文曬單、炫富，對討論毫無任何實質貢獻。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #64A600; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 24. 惡意劇透：</span><span class="trouble-text">在大家還沒看最新內容時，故意在不准劇透處留言。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #ff4500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 25. 盜版資源：</span><span class="trouble-text">公開在群組索取侵權影片、軟體或破解碼。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #64A600; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 26. 文不對題：</span><span class="trouble-text">在嚴肅的討論中發無關的迷因圖或笑話洗版。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #ff4500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 27. 政治傳教：</span><span class="trouble-text">在健康討論群中強行帶入政治立場或信仰議題。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #64A600; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 28. 外星文者：</span><span class="trouble-text">使用大量火星文、注音文，讓人看不懂想說什麼。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #64A600; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 29. 謠言轉發：</span><span class="trouble-text">轉發未經查證的內容，特別是恐慌性質的消息。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #64A600; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 30. 標記狂魔：</span><span class="trouble-text">為了點小事，半夜標記社群成員或管理員。</span></div>
+                    </div>
+                </div>
+
+                <div class="category-group">
+                    <div class="category-name">三、社交衝突與終極魔王</div>
+                    <div class="trouble-list">
+                        <div class="trouble-item" style="border-left: 4px solid #ff4500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 31. 跨群開戰：</span><span class="trouble-text">把別的社群的恩怨帶進本社群來互相叫囂。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #ff4500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 32. 私下交易：</span><span class="trouble-text">私下找成員交易或推銷，出事了才找管理員負責。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #ff4500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 33. 背刺管理：</span><span class="trouble-text">平時潛水，管理員一出錯立刻截圖到處公審。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #ff4500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 34. 派系分化：</span><span class="trouble-text">在群內搞小圈圈排擠新人，私建非官方小群組。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #64A600; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 35. 空降要權：</span><span class="trouble-text">剛進群沒多久，什麼事都沒做就吵著要當管理員。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #64A600; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 36. 已讀不回：</span><span class="trouble-text">違規後管理員私訊溝通，對方完全不回視若無睹。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #EA7500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 37. 被盜藉口：</span><span class="trouble-text">違規後一律推說是「我剛才被盜帳號了，不是我」。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #EA7500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 38. 幽靈分身：</span><span class="trouble-text">一個人開好幾個帳號，自導自演製造假民意。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #64A600; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 39. 自私自利：</span><span class="trouble-text">只領福利不貢獻，需要他貢獻時立刻裝死。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #ff4500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 40. 挑撥離間：</span><span class="trouble-text">私下向管理員舉報 A，又跑去跟 A 說管理員討厭他。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #ff4500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 41. 截圖外流：</span><span class="trouble-text">將社群內的對話截圖轉發到其他社群平台公審。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #ff4500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 42. 人格障礙：</span><span class="trouble-text">純粹為了搞混亂而違規，沒有任何具體原因。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #ff4500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 43. 嘲諷義工：</span><span class="trouble-text">笑管理員沒領錢還愛管事，否定所有管理員付出。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #ff4500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 44. 模仿分身：</span><span class="trouble-text">模仿管理員的頭像、名字，騙取成員信任或個資。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #EA7500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 45. 七進七出：</span><span class="trouble-text">反覆退出又進群，只為了在訊息框刷存在感。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #ff4500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 46. 惡意軟體：</span><span class="trouble-text">發布含有病毒、盜取個資的不明壓縮檔或連結。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #ff4500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 47. 無視隱私：</span><span class="trouble-text">未經同意肉搜成員個資或公開其照片。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #EA7500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 48. 裝熟糾纏：</span><span class="trouble-text">對異性成員進行騷擾式打招呼，造成他人困擾。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #EA7500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 49. 指導大師：</span><span class="trouble-text">整天指導管理員應該怎麼管社群，自己卻不做。</span></div>
+                        <div class="trouble-item" style="border-left: 4px solid #ff4500; background: rgba(255, 69, 0, 0.1);"><span class="trouble-label"> 50. 自殘恐嚇：</span><span class="trouble-text">違規被處理時，以激烈言行威脅管理員，造成壓力。</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="glass-card section contact-section">
+                <h2><i class="fas fa-comments"></i> 聯繫我們</h2>
+                <p>本社群旨在提供一個友善、和諧的交流環境，請大家共同遵守規章，互相尊重。若有任何問題或建議，歡迎隨時聯繫管理員。</p>
+                
+                <div class="btn-container">
+                    <a href="https://lin.ee/S5aEqD2" class="btn btn-primary" target="_blank">
+                        <i class="fab fa-line"></i> 社群官方帳號
+                    </a>
+                    <a href="https://line.me/ti/g2/508sZVcnGG3Y58jmta8noBq9piZUGHq7ZAUdQw?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" class="btn btn-accent" target="_blank">
+                        <i class="fas fa-user-plus"></i> 立即加入社群
+                    </a>
+                </div>
+            </div>
+			        <footer>
+            <p>© 2022–2026 《德古拉》版權所有</p>
+        </footer>
+        </div>
+
+   
+    <script>
+        // 创建粒子效果
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            
+            // 检测设备类型和性能
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const isLowPerformance = navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4;
+            
+            // 根据设备调整粒子数量
+            let particleCount;
+            if (isMobile || isLowPerformance) {
+                particleCount = 15; // 移动设备或低性能设备使用较少粒子
+            } else {
+                particleCount = 50; // 桌面设备使用更多粒子
+            }
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                particle.style.opacity = Math.random() * 0.5 + 0.3;
+                
+                // 随机颜色
+                const colors = ['rgba(0, 195, 0, 0.6)', 'rgba(44, 107, 237, 0.6)', 'rgba(255, 149, 0, 0.6)'];
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            
+            // 防複製保護
+            // 禁止右鍵菜單
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                showProtectionMessage();
+                return false;
+            });
+            
+            // 禁止選取文字
+            document.addEventListener('selectstart', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            // 禁止拖曳
+            document.addEventListener('dragstart', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            // 禁止複製快捷鍵 (Ctrl+C, Cmd+C)
+            document.addEventListener('copy', function(e) {
+                e.preventDefault();
+                showProtectionMessage();
+                return false;
+            });
+            
+            // 禁止剪下快捷鍵 (Ctrl+X, Cmd+X)
+            document.addEventListener('cut', function(e) {
+                e.preventDefault();
+                showProtectionMessage();
+                return false;
+            });
+            
+            // 禁止常見的複製快捷鍵組合
+            document.addEventListener('keydown', function(e) {
+                // Ctrl+C, Cmd+C (複製)
+                if ((e.ctrlKey || e.metaKey) && e.key === 'c') {
+                    e.preventDefault();
+                    showProtectionMessage();
+                    return false;
+                }
+                // Ctrl+X, Cmd+X (剪下)
+                if ((e.ctrlKey || e.metaKey) && e.key === 'x') {
+                    e.preventDefault();
+                    showProtectionMessage();
+                    return false;
+                }
+                // Ctrl+A, Cmd+A (全選)
+                if ((e.ctrlKey || e.metaKey) && e.key === 'a') {
+                    e.preventDefault();
+                    return false;
+                }
+                // Ctrl+U, Cmd+U (查看源代碼)
+                if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+                    e.preventDefault();
+                    return false;
+                }
+                // F12 (開發者工具)
+                if (e.key === 'F12') {
+                    e.preventDefault();
+                    return false;
+                }
+                // Ctrl+Shift+I, Cmd+Option+I (開發者工具)
+                if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'I') {
+                    e.preventDefault();
+                    return false;
+                }
+                // Ctrl+Shift+J, Cmd+Option+J (控制台)
+                if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'J') {
+                    e.preventDefault();
+                    return false;
+                }
+                // Ctrl+Shift+C, Cmd+Option+C (檢查元素)
+                if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'C') {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            
+            // 顯示保護提示訊息
+            function showProtectionMessage() {
+                // 創建提示框（如果不存在）
+                let messageBox = document.getElementById('protection-message');
+                if (!messageBox) {
+                    messageBox = document.createElement('div');
+                    messageBox.id = 'protection-message';
+                    messageBox.style.cssText = `
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: linear-gradient(135deg, rgba(255, 69, 0, 0.95), rgba(220, 53, 69, 0.95));
+                        color: white;
+                        padding: 20px 40px;
+                        border-radius: 15px;
+                        box-shadow: 0 10px 40px rgba(255, 69, 0, 0.5);
+                        z-index: 10000;
+                        font-size: 1.1rem;
+                        font-weight: bold;
+                        text-align: center;
+                        backdrop-filter: blur(10px);
+                        border: 2px solid rgba(255, 255, 255, 0.3);
+                        opacity: 0;
+                        transition: opacity 0.3s ease;
+                    `;
+                    messageBox.innerHTML = '⚠️';
+                    document.body.appendChild(messageBox);
+                }
+                
+                // 顯示訊息
+                messageBox.style.opacity = '1';
+                
+                // 2秒後自動隱藏
+                setTimeout(() => {
+                    messageBox.style.opacity = '0';
+                }, 2000);
+            }
+            
+            // 滚动动画效果 - 使用Intersection Observer优化性能
+            const sections = document.querySelectorAll('.section');
+            
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '50px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                        observer.unobserve(entry.target); // 停止观察已显示的元素
+                    }
+                });
+            }, observerOptions);
+            
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+            
+            // 回到顶部按钮功能 - 使用节流优化性能
+            const backToTopBtn = document.getElementById('backToTop');
+            let scrollTimeout;
+            
+            window.addEventListener('scroll', function() {
+                // 使用requestAnimationFrame优化滚动性能
+                if (scrollTimeout) {
+                    window.cancelAnimationFrame(scrollTimeout);
+                }
+                
+                scrollTimeout = window.requestAnimationFrame(function() {
+                    if (window.pageYOffset > 300) {
+                        backToTopBtn.classList.add('show');
+                    } else {
+                        backToTopBtn.classList.remove('show');
+                    }
+                });
+            }, { passive: true }); // passive: true 提升滚动性能
+            
+            backToTopBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // 按钮点击效果 - 优化移动端体验
+            const buttons = document.querySelectorAll('.btn');
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            if (!isMobile) {
+                // 桌面端才添加悬停效果
+                buttons.forEach(button => {
+                    button.addEventListener('mouseenter', function() {
+                        this.style.transform = 'translateY(-3px) scale(1.05)';
+                    });
+                    
+                    button.addEventListener('mouseleave', function() {
+                        this.style.transform = 'translateY(0) scale(1)';
+                    });
+                });
+            }
+            
+            // 优化性能：延迟加载非关键动画
+            setTimeout(() => {
+                document.body.classList.add('animations-loaded');
+            }, 1000);
+        });
+        
+        // 页面可见性API - 页面不可见时暂停动画
+        document.addEventListener('visibilitychange', function() {
+            const particles = document.getElementById('particles');
+            const gradientBg = document.querySelector('.gradient-bg');
+            
+            if (document.hidden) {
+                // 页面不可见时暂停动画
+                particles.style.animationPlayState = 'paused';
+                gradientBg.style.animationPlayState = 'paused';
+            } else {
+                // 页面可见时恢复动画
+                particles.style.animationPlayState = 'running';
+                gradientBg.style.animationPlayState = 'running';
+            }
+        });
+    </script>
+</body>
+</html>
